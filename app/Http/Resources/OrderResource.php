@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class OrderResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'status' => $this->status,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
+
+            // Include the user's contact info (for the admin panel)
+            'user' => new UserContactResource($this->whenLoaded('user')),
+
+            // Include all items in the order
+            'items' => OrderItemResource::collection($this->whenLoaded('items')),
+        ];
+    }
+}
