@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PostTypeSeeder::class,
             SliderSeeder::class,
-            PostSeeder::class,
+//            PostSeeder::class,
 //            CategorySeeder::class,
 //            PostSeeder::class,
 

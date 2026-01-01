@@ -7,6 +7,7 @@ Route::prefix('auth')->group(function () {
 
     // 1. Send OTP (for both login and registration) - NO CHANGE
     Route::post('/send-otp', [AuthController::class, 'sendOtp']);
+    Route::post('/login-password', [AuthController::class, 'loginWithPassword']);
 
     // 2. NEW: Verify OTP. This handles BOTH login and the first step of registration.
     // It replaces the old /login-with-otp route.

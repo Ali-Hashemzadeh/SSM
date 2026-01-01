@@ -12,54 +12,49 @@ class PostTypeSeeder extends Seeder
      */
     public function run(): void
     {
+        // MVP SEO: Only the absolute essentials for Google to index correctly.
+        $basicSeo = [
+            'meta_description', // Crucial for CTR in search results
+            'meta_keywords',    // Simple keyword tracking
+        ];
+
         $postTypes = [
+            // --- 1. SLIDER (Home Page Visuals) ---
+            // Simple: Just an image (handled by media), a link, and a button label.
             [
                 'name' => 'slider',
                 'title' => 'اسلایدر',
                 'fields' => [
-                    'title',
-                    'co-title',
-                    'caption'
+                    'link_url',       // Where the slide goes when clicked
+                    'button_text',    // e.g., "Read More"
                 ],
             ],
+
+
+            // --- 3. ARTICLES (Blog/News) ---
+            // The core dynamic content.
             [
-                'name' => 'services',
-                'title' => 'خدمات',
-                'fields' => [
-                    'caption',
-                ],
-            ],
-            [
-                'name' => 'statistics',
-                'title' => 'آمار',
-                'fields' => [
-                    'amount'
-                ],
-            ],
-            [
-                'name' => 'recent_products',
-                'title' => 'نمونه کار های اخیر',
-                'fields' => [
-                    'tags'
-                ],
-            ],
-            [
-                'name' => 'customer_reviews',
-                'title' => 'نظرات مشتریان',
-                'fields' => [
-                    'comment',
-                    'customer_name',
-                    'customer_name_caption'
-                ],
-            ],
-            [
-                'name' => 'articles',
+                'name' => 'article',
                 'title' => 'مقالات',
-                'fields' => [
-                    'caption',
-                    'date',
-                ],
+                'fields' => array_merge([
+                    'summary',        // Short text for cards/lists (Excerpt)
+                ], $basicSeo),
             ],
+
+            // --- 4. SERVICES / PRODUCTS (The Offer) ---
+            // A generic type to list what the business does or sells.
+            [
+                'name' => 'service',
+                'title' => 'خدمات',
+                'fields' => array_merge([
+                ], $basicSeo),
+            ],
+            [
+                'name' => 'faq',
+                'title' => 'پرسش و پاسخ',
+                'fields' => array_merge([])
+            ]
+
         ];
 
         foreach ($postTypes as $type) {

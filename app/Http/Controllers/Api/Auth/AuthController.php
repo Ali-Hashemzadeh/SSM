@@ -7,9 +7,11 @@ use App\Http\Requests\Auth\LoginRequest; // We will remove this
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\SendOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest; // <-- NEW
+use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -155,5 +157,46 @@ class AuthController extends Controller
             Log::error('Token refresh failed', ['error' => $e->getMessage(), 'user_id' => $request->user()->id ?? null]);
             return response()->json(['success' => false, 'message' => 'خطا در تمدید توکن'], 500);
         }
+    }
+
+    public function loginWithPassword(Request $request): JsonResponse
+    {
+        // 1. Validate Input
+        $fields = $request->validate([
+            'mobile' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        // 2. Find User
+        $user = User::where('mobile', $fields['mobile'])->first();
+
+        // 3. Check Password
+        if (!$user || !Hash::check($fields['password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'شماره موبایل یا رمز عبور اشتباه است.' // "Invalid credentials"
+            ], 401);
+        }
+
+        // 4. Generate Token
+        // We delete old tokens to prevent clutter, or keep them for multi-device login (your choice)
+        // $user->tokens()->delete();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        // 5. Return Response (Matching your profile structure)
+        return response()->json([
+            'success' => true,
+            'message' => 'ورود با موفقیت انجام شد',
+            'data' => [
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'user' => [
+                    'id' => $user->id,
+                    'mobile' => $user->mobile,
+                    'full_name' => $user->full_name,
+                    'role' => $user->relationLoaded('role') ? $user->role->only(['slug', 'name']) : null,
+                ],
+            ]
+        ]);
     }
 }
