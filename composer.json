@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "dedoc/scramble": "^0.12.35",
+        "dedoc/scramble": "^0.13.10",
         "hekmatinasser/verta": "^8.5",
         "intervention/image-laravel": "^1.5",
         "laravel/framework": "^12.0",
