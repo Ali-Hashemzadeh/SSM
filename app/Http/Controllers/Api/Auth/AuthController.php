@@ -162,28 +162,39 @@ class AuthController extends Controller
     public function loginWithPassword(Request $request): JsonResponse
     {
         // 1. Validate Input
+        // We expect EITHER email OR mobile to be present
         $fields = $request->validate([
-            'mobile' => 'required|string',
+            'email' => 'required_without:mobile|nullable|email',
+            'mobile' => 'required_without:email|nullable|string',
             'password' => 'required|string',
         ]);
 
-        // 2. Find User
-        $user = User::where('mobile', $fields['mobile'])->first();
+        // 2. Find User (Check Email OR Mobile)
+        // We initialize the query and apply the condition based on which field exists
+        $user = User::query();
+
+        if ($request->filled('email')) {
+            $user->where('email', $fields['email']);
+        } else {
+            $user->where('mobile', $fields['mobile']);
+        }
+
+        $user = $user->first();
 
         // 3. Check Password
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'شماره موبایل یا رمز عبور اشتباه است.' // "Invalid credentials"
+                // Update message to reflect both possibilities
+                'message' => 'اطلاعات ورود (ایمیل/موبایل یا رمز عبور) اشتباه است.'
             ], 401);
         }
 
         // 4. Generate Token
-        // We delete old tokens to prevent clutter, or keep them for multi-device login (your choice)
-        // $user->tokens()->delete();
+        // $user->tokens()->delete(); // Optional: Clear old tokens
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // 5. Return Response (Matching your profile structure)
+        // 5. Return Response
         return response()->json([
             'success' => true,
             'message' => 'ورود با موفقیت انجام شد',
@@ -192,8 +203,10 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'user' => [
                     'id' => $user->id,
+                    'email' => $user->email, // Added email to response
                     'mobile' => $user->mobile,
                     'full_name' => $user->full_name,
+                    // Ensure the 'role' relationship exists in your User model
                     'role' => $user->relationLoaded('role') ? $user->role->only(['slug', 'name']) : null,
                 ],
             ]
