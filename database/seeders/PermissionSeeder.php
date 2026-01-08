@@ -109,6 +109,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'orders.view', 'description' => 'مشاهده سفارشات (درخواست‌ها)'],
             ['name' => 'orders.edit', 'description' => 'ویرایش سفارشات (تغییر وضعیت)'],
             ['name' => 'orders.delete', 'description' => 'حذف سفارشات'],
+            ['name' => 'system.logs', 'description' => 'مشاهده لاگ ها']
             // --- END ADD ---
         ];
 

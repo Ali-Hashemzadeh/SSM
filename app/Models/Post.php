@@ -9,10 +9,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Contracts\Activity;
 
 class Post extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'title',
@@ -34,6 +38,38 @@ class Post extends Model
         'created_at' => JalaliDateTime::class,
         'updated_at' => JalaliDateTime::class,
     ];
+
+    /**
+     * Spatie Activity Log Configuration
+     */
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            // Automatically log any field present in $fillable
+            ->logFillable()
+            // Prevent logging the 'seen' counter (optional, keeps logs clean)
+            ->dontLogIfAttributesChangedOnly(['seen'])
+            // Only save fields that actually changed
+            ->logOnlyDirty()
+            // Don't save a log entry if nothing important changed
+            ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Spatie Hook: Tap into the activity before it saves.
+     * We use this to force 'post_type_id' into the log properties every time.
+     */
+    public function tapActivity(Activity $activity, string $eventName)
+    {
+        $activity->properties = $activity->properties->merge([
+            'post_type_id' => $this->post_type_id,
+        ]);
+    }
+
+    /* -----------------------------------------------------------------
+     |  Relationships & Methods
+     | -----------------------------------------------------------------
+     */
 
     /**
      * Get the author of the post.
@@ -85,7 +121,7 @@ class Post extends Model
 
     public function getStatusAttribute(): ?string
     {
-        return PostStatuses::pairs()[$this->attributes['status']];
+        return PostStatuses::pairs()[$this->attributes['status']] ?? null;
     }
 
     /**
@@ -95,4 +131,4 @@ class Post extends Model
     {
         $this->increment('seen');
     }
-} 
+}

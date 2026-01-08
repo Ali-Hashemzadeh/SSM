@@ -19,6 +19,21 @@ use App\Http\Controllers\Api\Panel\ProductController;
 use App\Http\Controllers\Api\Panel\ProductCategoryController;
 // --- ADD THIS LINE FOR ORDERS ---
 use App\Http\Controllers\Api\Panel\OrderController as PanelOrderController;
+use App\Http\Controllers\Api\Panel\ActivityLogController;
+
+Route::middleware('auth:sanctum')->prefix('activity-logs')->group(function () {
+    // View all logs
+    Route::get('/', [ActivityLogController::class, 'index'])
+        ->middleware('permission:system.logs'); // or just remove middleware if not needed yet
+
+    // View single log
+    Route::get('/{id}', [ActivityLogController::class, 'show'])
+        ->middleware('permission:system.logs');
+
+    // Delete a log
+    Route::delete('/{id}', [ActivityLogController::class, 'destroy'])
+        ->middleware('permission:system.logs');
+});
 
 
 Route::prefix('panel')->group(function () {
