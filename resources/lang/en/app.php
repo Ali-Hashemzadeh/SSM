@@ -1,33 +1,5 @@
 <?php
 
-return [
-    'services_title' => 'Our Services',
-    'service_co_title' => 'What We Offer',
-    'service_caption' => 'We offer a complete set of specialized services for the growth and success of your business.',
-    'statistics_title' => 'General Statistics',
-    'statistics_co_title' => 'Our Success in Numbers',
-    'statistics_caption' => 'A quick look at our achievements through key statistics that show our commitment and expertise.',
-    'video_box_title' => 'Get to Know Our Work Process',
-    'video_box_co_title' => 'A Closer Look',
-    'video_box_caption' => 'In this video, we introduce you more to our work stages, our team, and the values we create.',
-    'video_box_second_title' => 'Why Choose Us?',
-    'video_box_column_1_title' => 'Expertise and Experience',
-    'video_box_column_1_caption' => 'Our team consists of specialists with years of experience who execute your projects in the best way.',
-    'video_box_column_2_title' => 'Committed Support',
-    'video_box_column_2_caption' => 'We are by your side even after project delivery to ensure the smooth operation of your systems.',
-    'work_samples_title' => 'Our Portfolio',
-    'work_samples_co_title' => 'Projects We Are Proud Of',
-    'work_sample_caption' => 'See a part of our successful projects done for outstanding clients in various industries.',
-    'work_sample_description' => 'We look at each project as a unique challenge and, with creativity and precision, provide sustainable and effective solutions. Our commitment to quality is evident in all our work samples.',
-    'work_sample_button_text' => 'View All Portfolios',
-    'customer_review_title' => 'Customer Reviews',
-    'customer_review_co_title' => 'The Voice of Our Customers',
-    'articles_title' => 'Latest Articles and News',
-    'articles_co_title' => 'Update Your Knowledge',
-    'footer_address_title' => 'Address',
-    'footer_address_text' => 'Tehran, Valiasr St., Technology Tower, 10th Floor, Unit 1001',
-    'footer_phone_title' => 'Phone Number',
-    'footer_phone_text' => '+98 21 1234 5678',
-    'footer_email_title' => 'Email',
-    'footer_email_text' => 'info@yourcompany.com',
-];
+return array (
+
+);
